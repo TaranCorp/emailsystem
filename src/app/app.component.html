@@ -1,6 +1,29 @@
-<div>Yo</div>
-<div>
-  <a routerLink="/auth" routerLinkActive="active">Login</a>
-  <a routerLink="/auth/register" routerLinkActive="active">Sign Up</a>
+<div class="ui container">
+  <div class="ui secondary pointing menu">  
+    <a routerLink="/" class="item" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active">
+      Home
+    </a>
+
+    <div class="right menu">
+      <ng-container *ngIf="(logged | async); else loggedOut">
+        <a class="ui item" routerLink="/inbox" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Inbox
+        </a>
+        <a class="ui item" routerLink="/logout" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Logout
+        </a> 
+      </ng-container>
+    </div>
+
+    <ng-template #loggedOut>
+      <a class="ui item" routerLink="/auth" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Login
+      </a>
+      <a class="ui item" routerLink="/auth/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Register
+      </a>
+    </ng-template>
+  </div>
+
+  <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>

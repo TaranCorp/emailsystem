@@ -1,43 +1,58 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { catchError, map, Observable, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
-const rootUrl = 'https://api.angular-email.com/';
+interface LoginResponse {
+  authenticated: boolean,
+  username: string
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  
+  private rootUrl = 'https://api.angular-email.com';
+  logged = new BehaviorSubject(false);
+
   constructor(private httpClient: HttpClient) { }
   
   isUsernameUnique(username: string): Observable<{available: boolean}> {
-    return this.httpClient.post(rootUrl + "auth/username", {
+    return this.httpClient.post(this.rootUrl + "/auth/username", {
       username 
     }) as Observable<{available: boolean}>;
   }
 
-  createAccount(
-      username: string | null,
-      password: string | null,
-      passwordConfirmation: string | null
-    ): Observable<any>  {
-    if (!username) {
+  createAccount(credentials: any): Observable<any>  {
+    if (!credentials.username) {
       throw new Error('Username is empty.');
     }
-    if (!password) {
+    if (!credentials.password) {
       throw new Error('Password is empty.');
     }
-    if (!passwordConfirmation) {
+    if (!credentials.passwordConfirmation) {
       throw new Error('Password confirmation is empty.');
     }
     
-    
-    return this.httpClient.post<{username: string}>(rootUrl + 'auth/signup', {
-      username,
-      password,
-      passwordConfirmation
-    });
+    return this.httpClient.post<{username: string}>(
+      `${this.rootUrl}/auth/signup`,
+      { ...credentials }
+    ).pipe(
+      tap(() => {
+        this.logged.next(true);
+      })
+    );
+  }
+
+  checkAuthentication() {
+    return this.httpClient.get<LoginResponse>(`${this.rootUrl}/auth/signedin`)
+      .pipe( 
+        tap(({authenticated}) => {
+          this.logged.next(authenticated);
+        })
+      )
+  }
+
+  login() {
+     
   }
 }

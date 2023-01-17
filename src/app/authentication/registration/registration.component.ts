@@ -62,11 +62,7 @@ export class RegistrationComponent {
       return ;
     }
 
-    this.userService.createAccount(
-      this.username.value,
-      this.password.value,
-      this.passwordConfirmation.value
-    ).subscribe({
+    this.userService.createAccount(this.registrationForm.value).subscribe({
       next: (response) => {
         
       },
