@@ -1,0 +1,29 @@
+<label>{{label}}</label>
+<input [type]="type" [formControl]="control">
+<div class="ui pointing red basic label" *ngIf="showErrors()">
+    <ng-container *ngIf="
+        control.errors?.['required'] &&
+        control.dirty &&
+        control.touched
+    ">
+        <p>{{label | titlecase}} is required</p>
+    </ng-container>
+    <ng-container *ngIf="control.errors?.['minlength']" >
+        <p>{{label | titlecase}} must contain at least {{control.errors?.['minlength'].requiredLength}} characters</p>
+    </ng-container>
+    <ng-container *ngIf="control.errors?.['maxlength']">
+        <p>{{label | titlecase}} cannot contain more than {{control.errors?.['maxlength'].requiredLength}} characters</p>
+    </ng-container>
+    <ng-container *ngIf="control.errors?.['pattern']">
+        <p>Invalid pattern</p>
+    </ng-container>
+    <ng-container *ngIf="control.errors?.['notUniqueUsername']">
+        <p>Username unavailable</p>
+    </ng-container>
+    <ng-container *ngIf="control.errors?.['error']">
+        <p>Unexpected validation error</p>
+    </ng-container>
+    <ng-container *ngIf="control.errors?.['passwordsMatch']">
+        <p>Password does not match</p>
+    </ng-container>
+</div>

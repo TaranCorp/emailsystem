@@ -1,0 +1,36 @@
+<div class="ui container">
+    <form class="ui form error" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+        <div class="field">
+            <app-input-form
+                [control]="username"
+                label="Username"
+            ></app-input-form>
+        </div>
+        <div class="field">
+            <app-input-form
+                [control]="password"
+                label="Password"
+                type="password"
+            ></app-input-form>
+        </div>
+        <div class="field">
+            <app-input-form
+                [control]="passwordConfirmation"
+                label="Confirm Password"
+                type="password"
+            ></app-input-form>
+        </div>
+        <div class=" field ui red basic label" *ngIf="registrationForm.errors">
+            <p *ngIf="registrationForm.errors?.['passwordsNotMatch']">Passwords does not match</p>
+            <p *ngIf="registrationForm.errors?.['noConnection']">Could not connect to server</p>
+            <p *ngIf="registrationForm.errors?.['unknownError']">Unexpected error</p>
+        </div>
+        <div>
+            <button
+                class="ui submit button primary"
+                [disabled]="registrationForm.invalid"
+                type="submit"
+            >Register</button>
+        </div>
+    </form>
+</div>
