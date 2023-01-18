@@ -64,7 +64,8 @@ export class RegistrationComponent {
 
     this.userService.createAccount(this.registrationForm.value).subscribe({
       next: (response) => {
-        
+        this.password.reset();
+        this.passwordConfirmation.reset();
       },
       error: (error) => {
         console.log(error);

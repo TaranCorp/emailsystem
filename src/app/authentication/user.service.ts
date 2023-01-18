@@ -7,12 +7,20 @@ interface LoginResponse {
   username: string
 }
 
+interface LoginCredentials {
+  username: string | null,
+  password: string | null
+}
+
+type AuthenticationResult = boolean | null;
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private rootUrl = 'https://api.angular-email.com';
-  logged = new BehaviorSubject(false);
+  logged = new BehaviorSubject<AuthenticationResult>(null);
+  observableLogged = this.logged.asObservable();
 
   constructor(private httpClient: HttpClient) { }
   
@@ -52,7 +60,19 @@ export class UserService {
       )
   }
 
-  login() {
-     
+  logout() {
+    return this.httpClient.post(`${this.rootUrl}/auth/signout`, {})
+      .pipe( 
+        tap(() => {
+          this.logged.next(false);
+        })
+      )
+  }
+
+  login(credentials: any) {
+    return this.httpClient.post(`${this.rootUrl}/auth/signin`, {...credentials})
+      .pipe(
+        tap(() => this.logged.next(true))
+      )
   }
 }

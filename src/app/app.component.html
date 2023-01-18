@@ -9,7 +9,7 @@
         <a class="ui item" routerLink="/inbox" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           Inbox
         </a>
-        <a class="ui item" routerLink="/logout" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="ui item" routerLink="/logout" routerLinkActive="active" (click)="onLogoutClick()" [routerLinkActiveOptions]="{ exact: true }">
           Logout
         </a> 
       </ng-container>
