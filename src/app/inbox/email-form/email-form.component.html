@@ -1,0 +1,38 @@
+<form [formGroup]="emailForm" (submit)="onSubmit()" class="ui form">
+    <div class="field">
+        <app-input-form
+            type="email"
+            label="To"
+            [control]="to"
+        ></app-input-form>
+    </div>
+    
+    <div class="field">
+        <app-input-form
+            type="email"
+            label="From"
+            [control]="from"
+        ></app-input-form>
+    </div>
+
+    <div class="field">
+        <app-input-form
+            label="Subject"
+            [control]="subject"
+        ></app-input-form>
+    </div>
+
+    <div class="field">
+        <app-input-form
+            controlType="textarea"
+            label="Content"
+            [control]="text"
+        ></app-input-form>
+    </div>
+    
+    <button 
+        class="ui primary button" 
+        type="submit"
+        >Send
+    </button>
+</form>

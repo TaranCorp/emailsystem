@@ -10,6 +10,7 @@ export class InputFormComponent {
   @Input() control: FormControl = new FormControl();
   @Input() label: string = '';
   @Input() type: string = 'text';
+  @Input() controlType = 'input';
 
   showErrors(): boolean {
     return !!this.control.errors && this.control.touched && this.control.dirty

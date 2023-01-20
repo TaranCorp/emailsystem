@@ -1,33 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
-
-interface LoginResponse {
-  authenticated: boolean,
-  username: string
-}
+import { LoginResponse } from '../shared/dto/login-response';
+import { Rest } from '../shared/rest';
 
 interface LoginCredentials {
   username: string | null,
   password: string | null
 }
 
-type AuthenticationResult = boolean | null;
+export type AuthenticationResult = boolean | null;
+type LoginResult = string | null;
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private rootUrl = 'https://api.angular-email.com';
+  rootUrl = Rest.angularEmailApiUrl;
+
   logged = new BehaviorSubject<AuthenticationResult>(null);
   observableLogged = this.logged.asObservable();
+
+  username = new BehaviorSubject<LoginResult>(null);
+  observableUsername = this.logged.asObservable();
 
   constructor(private httpClient: HttpClient) { }
   
   isUsernameUnique(username: string): Observable<{available: boolean}> {
-    return this.httpClient.post(this.rootUrl + "/auth/username", {
-      username 
-    }) as Observable<{available: boolean}>;
+    return this.httpClient.post(this.rootUrl + "/auth/username", { username }) as Observable<{available: boolean}>;
   }
 
   createAccount(credentials: any): Observable<any>  {
@@ -45,8 +45,9 @@ export class UserService {
       `${this.rootUrl}/auth/signup`,
       { ...credentials }
     ).pipe(
-      tap(() => {
+      tap(({ username }) => {
         this.logged.next(true);
+        this.username.next(username);
       })
     );
   }
@@ -54,8 +55,9 @@ export class UserService {
   checkAuthentication() {
     return this.httpClient.get<LoginResponse>(`${this.rootUrl}/auth/signedin`)
       .pipe( 
-        tap(({authenticated}) => {
+        tap(({ authenticated, username }) => {
           this.logged.next(authenticated);
+          this.username.next(username);
         })
       )
   }
@@ -65,14 +67,18 @@ export class UserService {
       .pipe( 
         tap(() => {
           this.logged.next(false);
+          this.username.next(null);
         })
       )
   }
 
   login(credentials: any) {
-    return this.httpClient.post(`${this.rootUrl}/auth/signin`, {...credentials})
+    return this.httpClient.post<LoginResponse>(`${this.rootUrl}/auth/signin`, {...credentials})
       .pipe(
-        tap(() => this.logged.next(true))
+        tap(({ username }) => {
+          this.logged.next(true)
+          this.username.next(username);
+        })
       )
   }
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import { UserService } from '../user.service';
 import { PasswordMatch } from '../validators/password-match';
@@ -24,7 +25,8 @@ export class RegistrationComponent {
 
   constructor(
     private uniqueUsername: UniqueUsername,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   registrationForm = new FormGroup({
@@ -66,6 +68,7 @@ export class RegistrationComponent {
       next: (response) => {
         this.password.reset();
         this.passwordConfirmation.reset();
+        this.router.navigateByUrl('/auth');
       },
       error: (error) => {
         console.log(error);
