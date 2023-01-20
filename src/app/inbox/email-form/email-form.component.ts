@@ -9,14 +9,14 @@ import { EmailRequest } from 'src/app/shared/dto/email-request';
 })
 export class EmailFormComponent implements OnInit {
   @Input() email: EmailRequest;
-
   @Output() submitEmail = new EventEmitter();
+
   emailForm = new FormGroup({
     to: new FormControl('', [Validators.required, Validators.email]),
     from: new FormControl({value: '', disabled: true}),
     subject: new FormControl('', Validators.required),
     text: new FormControl('', Validators.required)
-  })
+  });
 
   ngOnInit() {
     if (this.email) {

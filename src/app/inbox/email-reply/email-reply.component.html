@@ -10,5 +10,6 @@
     <div modalTitle>Reply</div>
     <app-email-form
         [email]="email"
+        (submitEmail)="onSubmit($event)"
     ></app-email-form>
 </app-modal>
